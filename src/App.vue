@@ -3,6 +3,7 @@ import { ref } from '@vue/reactivity'
 import { onMounted, onBeforeUnmount } from '@vue/runtime-core'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
+import ThreeView from './components/three/ThreeView.vue'
 
 
 const route = useRoute()
@@ -79,7 +80,7 @@ const play = () => {
     </button>
 
     <component
-      :is=""
+      :is="ThreeView"
       id="template"
       :audio-data="audioProcessedData"
     />
