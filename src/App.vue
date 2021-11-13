@@ -58,6 +58,7 @@ onBeforeUnmount(() => {
 
 const play = () => {
   audioElement.value.play()
+  audioCtx.resume()
   hidePlayInitBtn.value = true
 }
 
