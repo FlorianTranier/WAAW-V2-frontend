@@ -77,6 +77,12 @@ const play = () => {
     >
       PLAY
     </button>
+
+    <component
+      :is=""
+      id="template"
+      :audio-data="audioProcessedData"
+    />
   </main>
 </template>
 
@@ -108,6 +114,11 @@ const play = () => {
   &.hide {
     display: none;
   }
+}
+
+#template {
+  width: 100%;
+  height: 100%;
 }
 
 </style>
