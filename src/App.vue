@@ -18,8 +18,10 @@ const audioElement = ref()
 const audioCtx = new AudioContext()
 const audioAnalyser = ref(audioCtx.createAnalyser())
 audioAnalyser.value.connect(audioCtx.destination)
+audioAnalyser.value.fftSize = 8192
+
 const audioRawData = ref(new Uint8Array(audioAnalyser.value.frequencyBinCount))
-const audioProcessedData = ref<number[]>([])
+const audioProcessedData = ref<number[]>()
 const hidePlayInitBtn = ref(false)
 
 onMounted(() => {
@@ -27,29 +29,38 @@ onMounted(() => {
   mediaElementSource.connect(audioAnalyser.value)
   audioAnalyser.value.connect(audioCtx.destination)
 
-  audioAnalyser.value.fftSize = 32768
-  audioAnalyser.value.minDecibels = -80
-  audioAnalyser.value.maxDecibels = -10
-  audioAnalyser.value.smoothingTimeConstant = 0.0
+  // audioAnalyser.value.fftSize = 32768
+  // audioAnalyser.value.minDecibels = -80
+  // audioAnalyser.value.maxDecibels = -10
+  // audioAnalyser.value.smoothingTimeConstant = 0.0
+  audioAnalyser.value.smoothingTimeConstant = 0.8
 
   audioElement.value.volume = 0.5
 })
 
 const analyserLoop = setInterval(() => {
   audioAnalyser.value.getByteFrequencyData(audioRawData.value)
-  audioProcessedData.value = processAudioData()
+  // audioProcessedData.value = processAudioData()
+  copyAudioData()
 }, 1000 / 60)
 
 const processAudioData = (): number[] => {
   const processedData = []
   for (let [i, j] = [40, 41]; i < audioRawData.value.length; i = j) {
-    j *= 1.01
+    j *= 1.005
     const sum = audioRawData.value.slice(i, j).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
     const mean = sum / (j - i)
 
-    processedData.push(mean ** (1.2 + i / 10000) + 1)
+    processedData.push(mean)
   }
   return processedData
+}
+
+const copyAudioData = (): void => {
+  audioProcessedData.value = []
+  for (let i = 0; i < audioRawData.value.length; i++) {
+    audioProcessedData.value.push(audioRawData.value[i])
+  }
 }
 
 onBeforeUnmount(() => {
@@ -94,7 +105,7 @@ const play = () => {
   width: 100vw;
   height: 100vh;
   display: flex;
-  background-color: hsla(0, 0%, 0%, 0.9);
+  background-color: hsla(0, 0%, 0%, 0.959);
 }
 
 #audio {

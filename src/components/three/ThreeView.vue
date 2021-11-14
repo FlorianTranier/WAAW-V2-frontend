@@ -11,14 +11,15 @@ const props = withDefaults(defineProps<{audioData: number[]}>(), {
 })
 
 onMounted(() => {
-  if (threeContainer.value)
+  if (threeContainer.value) {
     threeApp = new ThreeApp(threeContainer.value)
+  }
 
 })
 
-watch(props.audioData, () => {
+watch(() => props.audioData, () => {
   if (threeApp) {
-    // threeApp.render(props.audioData)
+    threeApp.render(props.audioData)
   }
 })
 
