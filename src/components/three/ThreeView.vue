@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ThreeApp } from '@/composables/three/ThreeApp'
+import { IScene } from '@/composables/three/templates/IScene'
+import { Scenes } from '@/composables/three/templates/Scene'
 import { ref } from '@vue/reactivity'
 import { onMounted, watch } from '@vue/runtime-core'
 
 const threeContainer = ref<HTMLElement>()
-let threeApp: ThreeApp
+let scene: IScene
 
 const props = withDefaults(defineProps<{audioData: number[]}>(), {
   audioData: () => []
@@ -12,14 +13,13 @@ const props = withDefaults(defineProps<{audioData: number[]}>(), {
 
 onMounted(() => {
   if (threeContainer.value) {
-    threeApp = new ThreeApp(threeContainer.value)
+    scene = new Scenes.SPHERE(threeContainer.value)
   }
-
 })
 
 watch(() => props.audioData, () => {
-  if (threeApp) {
-    threeApp.render(props.audioData)
+  if (scene) {
+    scene.render(props.audioData)
   }
 })
 

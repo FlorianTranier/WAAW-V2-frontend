@@ -3,7 +3,7 @@ import { ref } from '@vue/reactivity'
 import { onMounted, onBeforeUnmount } from '@vue/runtime-core'
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
-import ThreeView from './components/three/ThreeView.vue'
+import ThreeView from '@/components/three/ThreeView.vue'
 
 
 const route = useRoute()
@@ -44,7 +44,8 @@ const analyserLoop = setInterval(() => {
   copyAudioData()
 }, 1000 / 60)
 
-const processAudioData = (): number[] => {
+// TODO FIX THIS
+/*const processAudioData = (): number[] => {
   const processedData = []
   for (let [i, j] = [40, 41]; i < audioRawData.value.length; i = j) {
     j *= 1.005
@@ -54,7 +55,7 @@ const processAudioData = (): number[] => {
     processedData.push(mean)
   }
   return processedData
-}
+}*/
 
 const copyAudioData = (): void => {
   audioProcessedData.value = []

@@ -21,9 +21,10 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'vue/script-setup-uses-vars': 'error',
     '@typescript-eslint/no-explicit-any': 'off',
-    "semi": ["error", "never"],
-    "object-curly-spacing": ["error", "always"],
-    "indent": ["error", 2],
+    'semi': ['error', 'never'],
+    'object-curly-spacing': ['error', 'always'],
+    'indent': ['error', 2],
+    'quotes': ['error', 'single'],
   },
   ignorePatterns: ['dist', 'node_modules'],
   settings: {

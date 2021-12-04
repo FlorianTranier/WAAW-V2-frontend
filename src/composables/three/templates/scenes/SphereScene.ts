@@ -1,7 +1,8 @@
-import { AdditiveBlending, BufferGeometry, Color, DynamicDrawUsage, Float32BufferAttribute, PerspectiveCamera, Points, PointsMaterial, Scene, TextureLoader, WebGLRenderer } from "three"
+import { AdditiveBlending, BufferGeometry, Color, Float32BufferAttribute, PerspectiveCamera, Points, PointsMaterial, Scene, TextureLoader, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { IScene } from '@/composables/three/templates/IScene'
 
-export class ThreeApp {
+export class SphereScene implements IScene {
   scene: Scene
   renderer: WebGLRenderer
   camera: PerspectiveCamera

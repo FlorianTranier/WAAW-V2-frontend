@@ -3,8 +3,8 @@ import App from '@/App.vue'
 
 const routes = [
   {
-    path: "/watch",
-    name: "Main",
+    path: '/watch',
+    name: 'Main',
     component: App
   }
 ]
