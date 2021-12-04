@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { IScene } from '@/composables/three/templates/IScene'
-import { Scenes } from '@/composables/three/templates/Scene'
+import { IScene } from '@composables/three/templates/IScene'
+import { Scenes } from '@composables/three/templates/Scene'
 import { ref } from '@vue/reactivity'
 import { onMounted, watch } from '@vue/runtime-core'
 

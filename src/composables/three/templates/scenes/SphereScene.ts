@@ -1,6 +1,6 @@
 import { AdditiveBlending, BufferGeometry, Color, Float32BufferAttribute, PerspectiveCamera, Points, PointsMaterial, Scene, TextureLoader, WebGLRenderer } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { IScene } from '@/composables/three/templates/IScene'
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { IScene } from '@composables/three/templates/IScene'
 
 export class SphereScene implements IScene {
   scene: Scene
@@ -12,7 +12,7 @@ export class SphereScene implements IScene {
   sizes: number[]
   particles: BufferGeometry
   particleSystem: Points<BufferGeometry, PointsMaterial>
-  orbit: OrbitControls
+  // orbit: OrbitControls
   count: number
 
   constructor(container: HTMLElement) {
@@ -21,13 +21,13 @@ export class SphereScene implements IScene {
     this.renderer = new WebGLRenderer({ alpha: true })
     this.renderer.setSize(container.clientWidth, container.clientHeight)
     container.appendChild(this.renderer.domElement)
-    this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
+    // this.orbit = new OrbitControls(this.camera, this.renderer.domElement)
 
 
     // Particles
     this.particles = new BufferGeometry()
     const particleMaterial = new PointsMaterial({
-      color: 0xffffff,
+      color: 0xFAC841,
       size: 4,
       map: new TextureLoader().load('./particle.png'),
       blending: AdditiveBlending,
@@ -54,9 +54,9 @@ export class SphereScene implements IScene {
       const phi = Math.acos(i)
       const theta = (2 * turns * phi) % (2 * Math.PI)
 
-      this.positions.push(Math.cos(theta) * Math.sin(phi) * radius)
       this.positions.push(Math.sin(theta) * Math.sin(phi) * radius)
       this.positions.push(Math.cos(phi) * radius)
+      this.positions.push(Math.cos(theta) * Math.sin(phi) * radius)
 
       color.setHSL(i / nbPoints, 1.0, 0.5)
 
@@ -75,17 +75,15 @@ export class SphereScene implements IScene {
     this.particleSystem = new Points(this.particles, particleMaterial)
     this.scene.add(this.particleSystem)
 
-    this.camera.position.set(0, 20, 400)
-    this.camera.rotation.set(0, 0, 0)
-    setTimeout(() => {
-      this.renderer.render( this.scene, this.camera)
-    }, 100)
-    this.animate()
+    this.camera.position.set(0, 0, 300)
+    this.particleSystem.rotation.set(Math.PI / 8, 0, Math.PI / 8)
+
+    window.addEventListener('resize', this.resizeHandler)
+    this.render([])
   }
 
   render = (audioData: number[]) => {
     // requestAnimationFrame(() => this.render(audioData))
-
     const skipFrequencies = 620
     // Update the particles
     for (let i = 0; i < this.count / 2; i++) {
@@ -103,12 +101,19 @@ export class SphereScene implements IScene {
 
     this.particles.setAttribute('position', new Float32BufferAttribute(this.positions, 3))
 
-    this.renderer.render( this.scene, this.camera )
+    this.renderer.render(this.scene, this.camera)
+  }
+
+  resizeHandler = () => {
+    this.camera.aspect = window.innerWidth / window.innerHeight
+    this.camera.updateProjectionMatrix()
+
+    this.renderer.setSize(window.innerWidth, window.innerHeight)
   }
 
   animate = () => {
     requestAnimationFrame(this.animate)
 
-    this.renderer.render( this.scene, this.camera)
+    this.renderer.render(this.scene, this.camera)
   }
 }
