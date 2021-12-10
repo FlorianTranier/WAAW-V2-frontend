@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { inject, onMounted, watch } from '@vue/runtime-core'
 import { Ref, ref } from '@vue/reactivity'
+import { getAudioInfo } from '@/gateways/audio/AudioApi'
+
+const props = withDefaults(defineProps<{audioId: string}>(), {
+  audioId: ''
+})
+
+const durationInSeconds = ref(0)
+const currentTime = ref(0)
 
 const mainElement = inject<Ref<HTMLElement>>('mainElement')
 const audioElement = inject<Ref<HTMLAudioElement>>('audioElement')
@@ -52,9 +60,21 @@ watch(
   }
 )
 
-onMounted(() => {
+watch(
+  () => props.audioId,
+  async () => {
+    if (props.audioId)
+      durationInSeconds.value = (await getAudioInfo(props.audioId)).durationInSeconds
+  }
+)
+
+onMounted(async () => {
   if (mainElement)
     mainElement.value.onmousemove = handleControlBarAppearance
+  if (audioElement) {
+    audioElement.value.ontimeupdate = () => currentTime.value = audioElement.value.currentTime
+    audioElement.value.onended = () => isPlaying.value = false
+  }
 })
 
 
@@ -83,7 +103,8 @@ onMounted(() => {
         >
       </span>
       <p class="duration">
-        00:00/02:30
+        {{ Math.floor(currentTime / 60).toString().padStart(2, '0') }}:{{ Math.ceil(currentTime % 60).toString().padStart(2, '0') }} /
+        {{ Math.floor(durationInSeconds / 60).toString().padStart(2, '0') }}:{{ (durationInSeconds % 60).toString().padStart(2, '0') }}
       </p>
       <span
         id="volume-icon"

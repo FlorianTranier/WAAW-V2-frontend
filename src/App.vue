@@ -6,12 +6,15 @@ import { useRoute } from 'vue-router'
 import ThreeView from '@/components/three/ThreeView.vue'
 import Controls from '@/components/controls/Controls.vue'
 
-
 const route = useRoute()
+const audioId = ref(route.query.v?.toString() ?? '')
 
 watch(
   () => route.query.v,
-  () => { if (audioElement.value) audioElement.value.src = `https://obscure-stream-04186.herokuapp.com/https://api.v2.waaw.space/audio/${route.query.v}` }
+  () => {
+    audioId.value = route.query.v?.toString() ?? ''
+    if (audioElement.value) audioElement.value.src = `${import.meta.env.VITE_API_BASE_URL}/audio/${audioId.value}` 
+  }
 )
 
 const audioElement = ref<HTMLAudioElement | undefined>()
@@ -93,7 +96,10 @@ onBeforeUnmount(() => {
       :audio-data="audioProcessedData"
     />
 
-    <Controls id="controls" />
+    <Controls
+      id="controls"
+      :audio-id="audioId"
+    />
   </main>
 </template>
 
