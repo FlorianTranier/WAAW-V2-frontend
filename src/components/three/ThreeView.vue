@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<{audioData: number[]}>(), {
 
 onMounted(() => {
   if (threeContainer.value) {
-    scene = new Scenes.SPHERE(threeContainer.value)
+    scene = new Scenes.FLATLINE(threeContainer.value) //new Scenes.SPHERE(threeContainer.value)
   }
 })
 
