@@ -26,7 +26,7 @@ const isMuted = ref<boolean>(false)
 const handleControlBarAppearance = () => {
   clearTimeout(showControlBarTimeout)
   showControlBar.value = true
-  showControlBarTimeout = setTimeout(() => showControlBar.value = false, 2000)
+  showControlBarTimeout = window.setTimeout(() => showControlBar.value = false, 2000)
 }
 
 const handlePlayPauseState = () => {
