@@ -2,6 +2,7 @@
 import { inject, onMounted, watch } from '@vue/runtime-core'
 import { Ref, ref } from '@vue/reactivity'
 import { getAudioInfo } from '@/gateways/audio/AudioApi'
+import { showOverlay } from '@/composables/overlay/overlay'
 
 const props = withDefaults(defineProps<{audioId: string}>(), {
   audioId: ''
@@ -10,24 +11,16 @@ const props = withDefaults(defineProps<{audioId: string}>(), {
 const durationInSeconds = ref(0)
 const currentTime = ref(0)
 
-const mainElement = inject<Ref<HTMLElement>>('mainElement')
 const audioElement = inject<Ref<HTMLAudioElement>>('audioElement')
 
 const showVolume = ref<boolean>(false)
-const showControlBar = ref<boolean>(false)
+
 const volume = ref<number>(1)
-let showControlBarTimeout: number
 
 let volumeBeforeMuted = 0
 
 const isPlaying = ref<boolean>(false)
 const isMuted = ref<boolean>(false)
-
-const handleControlBarAppearance = () => {
-  clearTimeout(showControlBarTimeout)
-  showControlBar.value = true
-  showControlBarTimeout = window.setTimeout(() => showControlBar.value = false, 2000)
-}
 
 const handlePlayPauseState = () => {
   if (audioElement) {
@@ -69,8 +62,6 @@ watch(
 )
 
 onMounted(async () => {
-  if (mainElement)
-    mainElement.value.onmousemove = handleControlBarAppearance
   if (audioElement) {
     audioElement.value.ontimeupdate = () => currentTime.value = audioElement.value.currentTime
     audioElement.value.onended = () => isPlaying.value = false
@@ -84,7 +75,8 @@ onMounted(async () => {
   <div>
     <div
       id="control-bar"
-      :class="{'show-control-bar': showControlBar}"
+      class="overlay-element"
+      :class="{'overlay-element-show': showOverlay}"
       @mouseleave="showVolume = false"
     >
       <span
@@ -150,9 +142,6 @@ onMounted(async () => {
   border-radius: 0.5rem;
   padding: 0.4rem 4rem;
   gap: 5rem;
-
-  opacity: 0;
-  transition: opacity 500ms ease-in-out;
 
   &>.duration {
     color: hsl(0, 0%, 100%);
@@ -227,10 +216,6 @@ onMounted(async () => {
 
 .show-volume {
   transform: scaleX(1) !important;
-}
-
-.show-control-bar {
-  opacity: 1 !important;
 }
 
 </style>
