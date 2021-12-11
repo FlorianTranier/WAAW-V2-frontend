@@ -34,9 +34,9 @@ const handleSceneSelection = (scene: string) => selectedScene.value = scene
 #container {
   height: 100vh;
   width: 20vw;
-  margin: 2rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  font-size: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
   grid-template-rows: repeat(10, 1fr);
   color: var(--custom-white);
   gap: 2rem;
@@ -48,6 +48,12 @@ const handleSceneSelection = (scene: string) => selectedScene.value = scene
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: all 100ms ease-in-out;
+  max-width: 20vw;
+
+  &:hover {
+    border-width: 0.2rem;
+  }
 }
 
 </style>

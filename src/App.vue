@@ -131,8 +131,8 @@ onBeforeUnmount(() => {
 #scene-selector {
   z-index: 2;
   position: fixed;
-  right: 0;
-  top: 0;
+  right: 2vw;
+  top: 2vh;
 }
 
 #audio {
