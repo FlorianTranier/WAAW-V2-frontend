@@ -38,12 +38,12 @@ const handleSceneSelection = (scene: string) => selectedScene.value = scene
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  color: white;
+  color: var(--custom-white);
   gap: 2rem;
 }
 
 .scene {
-  border: white solid 0.1rem;
+  border: var(--custom-white) solid 0.1rem;
   display: flex;
   justify-content: center;
   align-items: center;
