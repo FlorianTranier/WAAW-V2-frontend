@@ -47,6 +47,7 @@ const handleSceneSelection = (scene: string) => selectedScene.value = scene
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   cursor: pointer;
   transition: all 100ms ease-in-out;
   max-width: 20vw;
