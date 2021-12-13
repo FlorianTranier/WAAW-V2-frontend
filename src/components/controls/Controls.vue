@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { inject, onMounted, watch } from '@vue/runtime-core'
 import { Ref, ref } from '@vue/reactivity'
-import { getAudioInfo } from '@/gateways/audio/AudioApi'
 import { showOverlay } from '@/composables/overlay/overlay'
+import { getAudioInfo, currentTime } from '@composables/audioInfo/audioInfo'
 
 const props = withDefaults(defineProps<{audioId: string}>(), {
   audioId: ''
 })
 
 const durationInSeconds = ref(0)
-const currentTime = ref(0)
 
 const audioElement = inject<Ref<HTMLAudioElement>>('audioElement')
 
@@ -63,7 +62,6 @@ watch(
 
 onMounted(async () => {
   if (audioElement) {
-    audioElement.value.ontimeupdate = () => currentTime.value = audioElement.value.currentTime
     audioElement.value.onended = () => isPlaying.value = false
   }
 })
@@ -146,6 +144,7 @@ onMounted(async () => {
   &>.duration {
     color: hsl(0, 0%, 100%);
     font-size: 1.5rem;
+    font-family: 'Roboto Mono', monospace;
   }
   &>.icon {
     height: 100%;

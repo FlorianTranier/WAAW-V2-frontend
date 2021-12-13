@@ -35,7 +35,7 @@ const handleSceneSelection = (scene: string) => selectedScene.value = scene
   height: 100vh;
   width: 20vw;
   display: grid;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
   grid-template-rows: repeat(10, 1fr);
   color: var(--custom-white);
