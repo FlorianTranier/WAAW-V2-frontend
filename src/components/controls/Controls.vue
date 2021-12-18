@@ -21,6 +21,7 @@ let volumeBeforeMuted = 0
 const isPlaying = ref<boolean>(false)
 const isMuted = ref<boolean>(false)
 const isFullScreen = ref<boolean>(false)
+const isLoopToggled = ref<boolean>(false)
 
 const handlePlayPauseState = () => {
   if (audioElement) {
@@ -43,6 +44,10 @@ const handleMuteUnmuteState = () => {
     volume.value = 0
     isMuted.value = true
   }
+}
+
+const handleLoopState = () => {
+  isLoopToggled.value = !isLoopToggled.value
 }
 
 const enableFullScreen = () => {
@@ -78,7 +83,11 @@ watch(
 
 onMounted(async () => {
   if (audioElement) {
-    audioElement.value.onended = () => isPlaying.value = false
+    audioElement.value.onended = () => {
+      if (isLoopToggled.value)
+        audioElement.value.play()
+      else isPlaying.value = false
+    }
   }
 })
 
@@ -108,7 +117,16 @@ onMounted(async () => {
           alt="play"
         >
       </span>
-      <span class="icon" />
+      <span
+        class="icon"
+        :class="{'icon-enabled': isLoopToggled}"
+      >
+        <img
+          src="@/assets/icons/loop.svg"
+          alt="loop"
+          @click="handleLoopState"
+        >
+      </span>
       <span class="icon">
         <img
           src="@/assets/icons/rewind-10.svg"
@@ -200,6 +218,11 @@ onMounted(async () => {
       width: 100%;
       height: 100%;
     }
+  }
+
+  &>.icon-enabled {
+    filter: none;
+    background-color: #dadada;
   }
 }
 
