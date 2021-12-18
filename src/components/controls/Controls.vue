@@ -55,6 +55,11 @@ const disableFullScreen = () => {
   isFullScreen.value = false
 }
 
+const forwardAudio = (seconds: number) => {
+  if (audioElement)
+    audioElement.value.currentTime += seconds
+}
+
 watch(
   volume,
   () => {
@@ -103,10 +108,25 @@ onMounted(async () => {
           alt="play"
         >
       </span>
+      <span class="icon" />
+      <span class="icon">
+        <img
+          src="@/assets/icons/rewind-10.svg"
+          alt="forward-10"
+          @click="forwardAudio(-10)"
+        >
+      </span>
       <p class="duration">
         {{ Math.floor(currentTime / 60).toString().padStart(2, '0') }}:{{ Math.floor(currentTime % 60).toString().padStart(2, '0') }} /
         {{ Math.floor(durationInSeconds / 60).toString().padStart(2, '0') }}:{{ (durationInSeconds % 60).toString().padStart(2, '0') }}
       </p>
+      <span class="icon">
+        <img
+          src="@/assets/icons/forward-10.svg"
+          alt="forward-10"
+          @click="forwardAudio(10)"
+        >
+      </span>
       <span class="icon">
         <img
           v-show="!isFullScreen"
