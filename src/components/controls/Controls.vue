@@ -104,7 +104,7 @@ onMounted(async () => {
         >
       </span>
       <p class="duration">
-        {{ Math.floor(currentTime / 60).toString().padStart(2, '0') }}:{{ Math.ceil(currentTime % 60).toString().padStart(2, '0') }} /
+        {{ Math.floor(currentTime / 60).toString().padStart(2, '0') }}:{{ Math.floor(currentTime % 60).toString().padStart(2, '0') }} /
         {{ Math.floor(durationInSeconds / 60).toString().padStart(2, '0') }}:{{ (durationInSeconds % 60).toString().padStart(2, '0') }}
       </p>
       <span class="icon">
