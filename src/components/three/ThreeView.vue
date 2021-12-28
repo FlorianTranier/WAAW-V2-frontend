@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { selectedScene } from '@/composables/sceneSelector/sceneSelector'
+import { selectedScene, selectedSceneInstance } from '@/composables/sceneSelector/sceneSelector'
 import { IScene } from '@composables/three/templates/IScene'
 import { Scenes } from '@composables/three/templates/Scene'
 import { ref } from '@vue/reactivity'
@@ -22,6 +22,7 @@ watch(selectedScene, () => {
   if (threeContainer.value) {
     if (threeContainer.value.lastChild) threeContainer.value.removeChild(threeContainer.value.lastChild)
     scene = new Scenes[selectedScene.value](threeContainer.value)
+    selectedSceneInstance.value = scene
   }
 })
 

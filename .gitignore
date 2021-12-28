@@ -6,3 +6,4 @@ dist-ssr
 .env
 .vscode
 .idea
+yarn-error.log
