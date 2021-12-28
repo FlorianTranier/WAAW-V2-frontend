@@ -16,6 +16,7 @@ const progressBarTrack = ref<HTMLDivElement|undefined>()
 
 const title = ref('')
 const thumbnailsUrl = ref('')
+const author = ref('')
 const durationInSeconds = ref<number>(0)
 
 watch(
@@ -25,6 +26,7 @@ watch(
       const info = await getAudioInfo(props.audioId)
       title.value = info.title
       thumbnailsUrl.value = info.thumbnailsUrl
+      author.value = info.author
       durationInSeconds.value = info.durationInSeconds
     }
   }
@@ -50,8 +52,13 @@ watchEffect(() => {
         :src="thumbnailsUrl"
         alt="Video thumbnail"
       >
-      <div id="title">
-        {{ title }}
+      <div id="content">
+        <div id="title">
+          {{ title }}
+        </div>
+        <div id="author">
+          {{ author }}
+        </div>
       </div>
     </div>
     <div
@@ -86,6 +93,11 @@ watchEffect(() => {
 
 #title {
   font-size: 1.5rem;
+}
+
+#author {
+  font-size: 1.25rem;
+  opacity: 0.8;
 }
 
 #progress-bar {
