@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<{audioId: string}>(), {
 const durationInSeconds = ref(0)
 
 const audioElement = inject<Ref<HTMLAudioElement>>('audioElement')
+const audioCtx = inject<AudioContext>('audioContext')
 
 const showVolume = ref<boolean>(false)
 
@@ -24,12 +25,13 @@ const isFullScreen = ref<boolean>(false)
 const isLoopToggled = ref<boolean>(false)
 
 const handlePlayPauseState = () => {
-  if (audioElement) {
+  if (audioElement && audioCtx) {
     if (isPlaying.value) {
       audioElement.value.pause()
       isPlaying.value = false
     } else {
       audioElement.value.play()
+      audioCtx.resume()
       isPlaying.value = true
     }
   }

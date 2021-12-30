@@ -35,6 +35,7 @@ const audioProcessedData = ref<number[]>()
 
 provide('mainElement', mainElement)
 provide('audioElement', audioElement)
+provide('audioContext', audioCtx)
 
 onMounted(() => {
   if (audioElement.value) {
