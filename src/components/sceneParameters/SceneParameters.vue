@@ -23,7 +23,7 @@ watch(selectedScene, () => {
     >
       <div
         v-for="parameter in sceneParameters"
-        :key="parameter"
+        :key="parameter.label"
       >
         <label
           :for="parameter.label"
