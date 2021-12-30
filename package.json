@@ -4,7 +4,7 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview",
     "lint": "eslint --ext .ts,.vue --ignore-path .gitignore --fix src"

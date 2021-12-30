@@ -5,8 +5,10 @@ import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ThreeView from '@/components/three/ThreeView.vue'
 import Controls from '@/components/controls/Controls.vue'
-import { handleOverlayAppearance } from './composables/overlay/overlay'
-import SceneSelector from './components/sceneSelector/SceneSelector.vue'
+import { handleOverlayAppearance } from '@composables/overlay/overlay'
+import SceneSelector from '@/components/sceneSelector/SceneSelector.vue'
+import SoundInfo from '@/components/soundInfo/SoundInfo.vue'
+import { setCurrentTimeListener } from '@composables/audioInfo/audioInfo'
 
 const route = useRoute()
 const audioId = ref(route.query.v?.toString() ?? '')
@@ -35,6 +37,7 @@ provide('audioElement', audioElement)
 
 onMounted(() => {
   if (audioElement.value) {
+    setCurrentTimeListener(audioElement.value)
     const mediaElementSource = audioCtx.createMediaElementSource(audioElement.value)
     mediaElementSource.connect(audioAnalyser.value)
     audioAnalyser.value.connect(audioCtx.destination)
@@ -104,10 +107,20 @@ onBeforeUnmount(() => {
 
     <Controls
       id="controls"
+      class="overlay-component"
       :audio-id="audioId"
     />
 
-    <SceneSelector id="scene-selector" />
+    <SceneSelector
+      id="scene-selector"
+      class="overlay-component"
+    />
+
+    <SoundInfo
+      id="audio-info"
+      class="overlay-component"
+      :audio-id="audioId"
+    />
   </main>
 </template>
 
@@ -120,19 +133,25 @@ onBeforeUnmount(() => {
   background-color: hsla(0, 0%, 0%, 0.959);
 }
 
-#controls {
+.overlay-component {
   z-index: 2;
   position: fixed;
-  bottom: 5vh;
-  left: 50%;
-  transform: translateX(-50%);
-}
 
-#scene-selector {
-  z-index: 2;
-  position: fixed;
-  right: 2vw;
-  top: 2vh;
+  &#controls {
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &#scene-selector {
+    right: 2vw;
+    top: 2vh;
+  }
+
+  &#audio-info {
+    left: 0;
+    top: 2vh;
+  }
 }
 
 #audio {
