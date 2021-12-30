@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { selectedScene } from '@/composables/sceneSelector/sceneSelector'
 import { IScene } from '@composables/three/templates/IScene'
 import { Scenes } from '@composables/three/templates/Scene'
 import { ref } from '@vue/reactivity'
@@ -13,7 +14,14 @@ const props = withDefaults(defineProps<{audioData: number[]}>(), {
 
 onMounted(() => {
   if (threeContainer.value) {
-    scene = new Scenes.SPHERE(threeContainer.value)
+    scene = new Scenes[selectedScene.value](threeContainer.value) //new Scenes.SPHERE(threeContainer.value)
+  }
+})
+
+watch(selectedScene, () => {
+  if (threeContainer.value) {
+    if (threeContainer.value.lastChild) threeContainer.value.removeChild(threeContainer.value.lastChild)
+    scene = new Scenes[selectedScene.value](threeContainer.value)
   }
 })
 

@@ -5,6 +5,8 @@ import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 import ThreeView from '@/components/three/ThreeView.vue'
 import Controls from '@/components/controls/Controls.vue'
+import { handleOverlayAppearance } from './composables/overlay/overlay'
+import SceneSelector from './components/sceneSelector/SceneSelector.vue'
 
 const route = useRoute()
 const audioId = ref(route.query.v?.toString() ?? '')
@@ -44,6 +46,10 @@ onMounted(() => {
     audioAnalyser.value.smoothingTimeConstant = 0.8
 
     audioElement.value.volume = 0.5
+  }
+
+  document.onmousemove = () => {
+    handleOverlayAppearance()
   }
 })
 
@@ -100,6 +106,8 @@ onBeforeUnmount(() => {
       id="controls"
       :audio-id="audioId"
     />
+
+    <SceneSelector id="scene-selector" />
   </main>
 </template>
 
@@ -118,6 +126,13 @@ onBeforeUnmount(() => {
   bottom: 5vh;
   left: 50%;
   transform: translateX(-50%);
+}
+
+#scene-selector {
+  z-index: 2;
+  position: fixed;
+  right: 2vw;
+  top: 2vh;
 }
 
 #audio {
