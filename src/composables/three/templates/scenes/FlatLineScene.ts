@@ -1,5 +1,9 @@
 import { BufferGeometry, Line, LineBasicMaterial, PerspectiveCamera, Scene, Vector2, WebGLRenderer } from 'three'
 import { IScene } from './../IScene'
+import { ref } from '@vue/reactivity'
+import { SceneParameter } from '@composables/three/templates/SceneParameter'
+import { SceneParameterType } from '@composables/three/templates/SceneParameterType'
+
 export class FlatLineScene implements IScene {
 
   scene: Scene
@@ -7,6 +11,8 @@ export class FlatLineScene implements IScene {
   camera: PerspectiveCamera
   material: LineBasicMaterial
   bufferGeometry: BufferGeometry
+  filterNumberOfPointsFactor = ref(10)
+  color = ref('#dadada')
 
   constructor(container: HTMLElement) {
     this.scene = new Scene()
@@ -15,7 +21,7 @@ export class FlatLineScene implements IScene {
     this.renderer.setSize(container.clientWidth, container.clientHeight)
     container.appendChild(this.renderer.domElement)
 
-    this.material = new LineBasicMaterial({ color: 0xdadada })
+    this.material = new LineBasicMaterial({ color: this.color.value })
 
     this.bufferGeometry = new BufferGeometry()
 
@@ -25,7 +31,9 @@ export class FlatLineScene implements IScene {
   }
 
   render(audioData: number[]): void {
-    const data = audioData.filter((_, index) => index % 10 === 0)
+    this.material = new LineBasicMaterial({ color: this.color.value })
+
+    const data = audioData.filter((_, index) => index % (100 - this.filterNumberOfPointsFactor.value) === 0)
     const xGap = window.innerWidth / data.length
     const yGap = window.innerHeight / 500
     const points = []
@@ -62,5 +70,10 @@ export class FlatLineScene implements IScene {
 
     this.renderer.render(this.scene, this.camera)
   }
+
+  getParameters = (): SceneParameter[] => [
+    new SceneParameter({ label: 'Details', result: this.filterNumberOfPointsFactor, type: SceneParameterType.RANGE, range: { low: 0, high: 99 } }),
+    new SceneParameter({ label: 'Color', result: this.color, type: SceneParameterType.COLOR })
+  ]
 
 }

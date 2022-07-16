@@ -20,6 +20,8 @@ let volumeBeforeMuted = 0
 
 const isPlaying = ref<boolean>(false)
 const isMuted = ref<boolean>(false)
+const isFullScreen = ref<boolean>(false)
+const isLoopToggled = ref<boolean>(false)
 
 const handlePlayPauseState = () => {
   if (audioElement) {
@@ -44,6 +46,25 @@ const handleMuteUnmuteState = () => {
   }
 }
 
+const handleLoopState = () => {
+  isLoopToggled.value = !isLoopToggled.value
+}
+
+const enableFullScreen = () => {
+  document.documentElement.requestFullscreen()
+  isFullScreen.value = true
+}
+
+const disableFullScreen = () => {
+  document.exitFullscreen()
+  isFullScreen.value = false
+}
+
+const forwardAudio = (seconds: number) => {
+  if (audioElement)
+    audioElement.value.currentTime += seconds
+}
+
 watch(
   volume,
   () => {
@@ -62,7 +83,11 @@ watch(
 
 onMounted(async () => {
   if (audioElement) {
-    audioElement.value.onended = () => isPlaying.value = false
+    audioElement.value.onended = () => {
+      if (isLoopToggled.value)
+        audioElement.value.play()
+      else isPlaying.value = false
+    }
   }
 })
 
@@ -92,10 +117,48 @@ onMounted(async () => {
           alt="play"
         >
       </span>
+      <span
+        class="icon"
+        :class="{'icon-enabled': isLoopToggled}"
+      >
+        <img
+          src="@/assets/icons/loop.svg"
+          alt="loop"
+          @click="handleLoopState"
+        >
+      </span>
+      <span class="icon">
+        <img
+          src="@/assets/icons/rewind-10.svg"
+          alt="forward-10"
+          @click="forwardAudio(-10)"
+        >
+      </span>
       <p class="duration">
-        {{ Math.floor(currentTime / 60).toString().padStart(2, '0') }}:{{ Math.ceil(currentTime % 60).toString().padStart(2, '0') }} /
+        {{ Math.floor(currentTime / 60).toString().padStart(2, '0') }}:{{ Math.floor(currentTime % 60).toString().padStart(2, '0') }} /
         {{ Math.floor(durationInSeconds / 60).toString().padStart(2, '0') }}:{{ (durationInSeconds % 60).toString().padStart(2, '0') }}
       </p>
+      <span class="icon">
+        <img
+          src="@/assets/icons/forward-10.svg"
+          alt="forward-10"
+          @click="forwardAudio(10)"
+        >
+      </span>
+      <span class="icon">
+        <img
+          v-show="!isFullScreen"
+          src="@/assets/icons/fullscreen.svg"
+          alt="fullscreen-on"
+          @click="enableFullScreen"
+        >
+        <img
+          v-show="isFullScreen"
+          src="@/assets/icons/fullscreen-exit.svg"
+          alt="fullscreen-off"
+          @click="disableFullScreen"
+        >
+      </span>
       <span
         id="volume-icon"
         class="icon"
@@ -155,6 +218,11 @@ onMounted(async () => {
       width: 100%;
       height: 100%;
     }
+  }
+
+  &>.icon-enabled {
+    filter: none;
+    background-color: #dadada;
   }
 }
 

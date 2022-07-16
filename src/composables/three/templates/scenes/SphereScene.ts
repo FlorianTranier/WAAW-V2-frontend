@@ -1,6 +1,7 @@
 import { AdditiveBlending, BufferGeometry, Color, Float32BufferAttribute, PerspectiveCamera, Points, PointsMaterial, Scene, TextureLoader, WebGLRenderer } from 'three'
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { IScene } from '@composables/three/templates/IScene'
+import { SceneParameter } from '@composables/three/templates/SceneParameter'
 
 export class SphereScene implements IScene {
   scene: Scene
@@ -27,7 +28,7 @@ export class SphereScene implements IScene {
     // Particles
     this.particles = new BufferGeometry()
     const particleMaterial = new PointsMaterial({
-      color: 0xFAC841,
+      color: 0xDADADA,
       size: 4,
       map: new TextureLoader().load('./particle.png'),
       blending: AdditiveBlending,
@@ -48,7 +49,7 @@ export class SphereScene implements IScene {
     this.sizes = []
     this.count = 0
 
-    const color = new Color()
+    const color = new Color('#dadada')
 
     for (let i = -1; i <= 1; i += step) {
       const phi = Math.acos(i)
@@ -58,7 +59,7 @@ export class SphereScene implements IScene {
       this.positions.push(Math.cos(phi) * radius)
       this.positions.push(Math.cos(theta) * Math.sin(phi) * radius)
 
-      color.setHSL(i / nbPoints, 1.0, 0.5)
+      //color.setHSL(i / nbPoints, 1.0, 0.5)
 
       this.colors.push(color.r, color.g, color.b)
 
@@ -68,7 +69,7 @@ export class SphereScene implements IScene {
     }
     this.startPositions = [...this.positions]
     this.particles.setAttribute('position', new Float32BufferAttribute(this.positions, 3))
-    // this.particles.setAttribute( 'color', new Float32BufferAttribute( this.colors, 3 ) )
+    this.particles.setAttribute( 'color', new Float32BufferAttribute( this.colors, 3 ) )
     // this.particles.setAttribute( 'size', new Float32BufferAttribute( this.sizes, 1 ).setUsage( DynamicDrawUsage ) )
 
     // Create the particle system
@@ -116,4 +117,6 @@ export class SphereScene implements IScene {
 
     this.renderer.render(this.scene, this.camera)
   }
+
+  getParameters = (): SceneParameter[] => []
 }

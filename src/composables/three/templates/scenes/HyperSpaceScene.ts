@@ -1,5 +1,6 @@
 import { AdditiveBlending, BufferGeometry, PerspectiveCamera, Points, PointsMaterial, Scene, TextureLoader, Vector3, WebGLRenderer } from 'three'
 import { IScene } from '../IScene'
+import { SceneParameter } from '@composables/three/templates/SceneParameter'
 export class HyperSpaceScene implements IScene {
 
   scene: Scene
@@ -85,5 +86,7 @@ export class HyperSpaceScene implements IScene {
 
     this.renderer.render(this.scene, this.camera)
   }
+
+  getParameters = (): SceneParameter[] => []
 
 }

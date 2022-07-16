@@ -9,6 +9,7 @@ import { handleOverlayAppearance } from '@composables/overlay/overlay'
 import SceneSelector from '@/components/sceneSelector/SceneSelector.vue'
 import SoundInfo from '@/components/soundInfo/SoundInfo.vue'
 import { setCurrentTimeListener } from '@composables/audioInfo/audioInfo'
+import SceneParameters from '@components/sceneParameters/SceneParameters.vue'
 
 const route = useRoute()
 const audioId = ref(route.query.v?.toString() ?? '')
@@ -121,6 +122,11 @@ onBeforeUnmount(() => {
       class="overlay-component"
       :audio-id="audioId"
     />
+
+    <SceneParameters
+      id="scene-parameters"
+      class="overlay-component"
+    />
   </main>
 </template>
 
@@ -151,6 +157,11 @@ onBeforeUnmount(() => {
   &#audio-info {
     left: 0;
     top: 2vh;
+  }
+
+  &#scene-parameters {
+    right: 2vw;
+    top: 70vh;
   }
 }
 
