@@ -137,45 +137,50 @@ onBeforeUnmount(() => {
   width: 100vw;
   height: 100vh;
   display: flex;
-  background-color: hsla(0, 0%, 0%, 0.959);
+  background-color: #0a0a0a;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .overlay-component {
-  z-index: 2;
+  z-index: 10;
   position: fixed;
+  pointer-events: auto;
 
   &#controls {
-    bottom: 5vh;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
   }
 
   &#scene-selector {
-    right: 2vw;
-    top: 2vh;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   &#audio-info {
-    left: 0;
-    top: 2vh;
+    left: 2rem;
+    top: 2rem;
   }
 
   &#scene-parameters {
-    right: 2vw;
-    top: 70vh;
+    right: 2rem;
+    bottom: 2rem;
   }
 }
 
 #audio {
-  opacity: 0;
-  max-width: 0px;
-  max-height: 0px;
-  z-index: -1000;
+  display: none;
 }
 
 #template {
   width: 100%;
   height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 </style>

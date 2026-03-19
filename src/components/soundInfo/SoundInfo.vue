@@ -77,47 +77,80 @@ watchEffect(() => {
 <style scoped lang="scss">
 
 #container {
-  height: 10vh;
-  width: 40vw;
-  color: var(--custom-white);
+  height: auto;
+  min-height: 80px;
+  width: fit-content;
+  max-width: 450px;
+  padding: 1.25rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+  border: 1px solid var(--border-glass);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-main);
+  color: var(--text-primary);
   display: flex;
-  gap: 1em;
-  justify-content: left;
+  gap: 1.25rem;
   align-items: center;
-  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 #thumbnail {
-  max-height: 100%;
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow: hidden;
 }
 
 #title {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #author {
-  font-size: 1.25rem;
-  opacity: 0.8;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 #progress-bar {
-  background: var(--bg-gray);
-  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1000;
 }
 
 #progress-bar-track {
-  border: var(--custom-white) solid 0.1em;
+  height: 100%;
+  background: var(--accent-primary);
   width: 0;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-@media only screen and (max-width: 1280px) {
-  #thumbnail {
-    display: none;
-  }
-
+@media only screen and (max-width: 768px) {
   #container {
-    margin-left: 2vw;
-    height: fit-content;
+    max-width: 80vw;
+    padding: 1rem;
+  }
+  
+  #thumbnail {
+    width: 48px;
+    height: 48px;
   }
 }
 

@@ -1,4 +1,13 @@
 :root {
-  --custom-white: #dadada;
-  --bg-gray: hsl(0, 0%, 50%);
+  --custom-white: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --bg-dark: rgba(18, 18, 18, 0.8);
+  --bg-glass: rgba(0, 0, 0, 0.4);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.1);
+  --accent-primary: #ffffff;
+  --accent-hover: #ffffff;
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --shadow-main: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --blur-amount: 20px;
 }

@@ -11,20 +11,19 @@ const handleSceneSelection = (scene: string) => selectedScene.value = scene
 </script>
 
 <template>
-  <div>
+  <div
+    id="container"
+    class="overlay-element"
+    :class="{'overlay-element-show': showOverlay}"
+  >
     <div
-      id="container"
-      class="overlay-element"
-      :class="{'overlay-element-show': showOverlay}"
+      v-for="scene in scenes"
+      :key="scene"
+      class="scene"
+      :class="{'scene-active': selectedScene === scene}"
+      @click="() => handleSceneSelection(scene)"
     >
-      <div
-        v-for="scene in scenes"
-        :key="scene"
-        class="scene"
-        @click="() => handleSceneSelection(scene)"
-      >
-        {{ scene }}
-      </div>
+      {{ scene }}
     </div>
   </div>
 </template>
@@ -32,28 +31,113 @@ const handleSceneSelection = (scene: string) => selectedScene.value = scene
 <style lang="scss" scoped>
 
 #container {
-  height: 100vh;
-  width: 20vw;
-  display: grid;
-  font-size: 1.2rem;
-  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
-  grid-template-rows: repeat(10, 1fr);
-  color: var(--custom-white);
-  gap: 2rem;
+  height: auto;
+  max-height: 80vh;
+  width: auto;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+  border: 1px solid var(--border-glass);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-main);
+  color: var(--text-primary);
+  gap: 0.5rem;
+  overflow-y: auto;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  &::before {
+    content: 'SCENES';
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    padding-left: 1.25rem;
+    opacity: 0.6;
+  }
+
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border-glass);
+    border-radius: 10px;
+  }
 }
 
 .scene {
-  border: var(--custom-white) solid 0.1rem;
+  position: relative;
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.75rem;
+  background: transparent;
+  border: none;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all 100ms ease-in-out;
-  max-width: 20vw;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  white-space: nowrap;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+
+  &::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0;
+    transition: all 0.3s ease;
+    transform: scale(0);
+  }
 
   &:hover {
-    border-width: 0.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    padding-left: 1.5rem;
+  }
+}
+
+.scene-active {
+  background: var(--bg-glass-heavy) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+  &::after {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 10px white;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  #container {
+    max-height: 25vh;
+    flex-direction: row;
+    width: calc(100vw - 3rem);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1rem;
+    align-items: center;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .scene {
+    padding: 0.6rem 1rem;
   }
 }
 

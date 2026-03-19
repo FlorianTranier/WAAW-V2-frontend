@@ -161,8 +161,8 @@ onMounted(async () => {
           @click="disableFullScreen"
         >
       </span>
-      <span
-        id="volume-icon"
+      <div
+        id="volume-container"
         class="icon"
         @mouseenter="showVolume = true"
       >
@@ -178,17 +178,21 @@ onMounted(async () => {
           alt="volume"
           @click="handleMuteUnmuteState"
         >
-        <input
-          v-model="volume"
-          class="volume"
+        <div 
+          class="volume-slider-wrapper"
           :class="{'show-volume': showVolume}"
-          type="range"
-          name="volume"
-          min="0"
-          max="1"
-          step="0.01"
         >
-      </span>
+          <input
+            v-model="volume"
+            class="volume"
+            type="range"
+            name="volume"
+            min="0"
+            max="1"
+            step="0.01"
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -200,91 +204,128 @@ onMounted(async () => {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 100vw;
-  height: 3rem;
-  border-radius: 0.5rem;
-  padding: 0.4rem 4rem;
-  gap: 5rem;
+  width: auto;
+  min-width: 400px;
+  height: 4rem;
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur-amount));
+  -webkit-backdrop-filter: blur(var(--blur-amount));
+  border: 1px solid var(--border-glass);
+  border-radius: 2rem;
+  padding: 0 2rem;
+  gap: 2rem;
+  box-shadow: var(--shadow-main);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--bg-glass-heavy);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
 
   &>.duration {
-    color: hsl(0, 0%, 100%);
-    font-size: 1.5rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
     font-family: 'Roboto Mono', monospace;
+    font-weight: 500;
+    min-width: 120px;
+    text-align: center;
   }
+  
   &>.icon {
-    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.5rem;
+    min-width: 1.5rem;
+    width: auto;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    opacity: 0.7;
     filter: invert(100%);
     cursor: pointer;
 
-    &>svg, &>img {
-      width: 100%;
-      height: 100%;
+    &.icon-enabled {
+      opacity: 1;
+      filter: none;
+      background: var(--accent-primary);
+      padding: 0.4rem;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     }
-  }
 
-  &>.icon-enabled {
-    filter: none;
-    background-color: #dadada;
+    &:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    &>img {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 1.5rem;
+    }
   }
 }
 
-#volume-icon {
+#volume-container {
   display: flex;
+  align-items: center;
+  width: auto;
+  transition: all 0.3s ease;
+}
+
+.volume-slider-wrapper {
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.show-volume {
+    width: 80px;
+    opacity: 1;
+    margin-left: 1rem;
+  }
 }
 
 .volume {
   -webkit-appearance: none;
-  position: absolute;
-  display: inline-block;
-  transition: opacity 1s ease-in-out;
-  min-height: 100%;
-  left: 140%;
-  top: 0%;
-  bottom: 0%;
-  margin: auto;
-  transform: scaleX(0);
-  transform-origin: 0%;
-  transition: all 200ms ease-in-out;
-  background: transparent;
+  width: 80px;
+  background: rgba(255, 255, 255, 0.1);
+  height: 4px;
+  border-radius: 2px;
   cursor: pointer;
-
-  &::-moz-range-thumb {
-    filter: invert(100%);
-    background-color: hsl(0, 0%, 100%);
-    height: 0%;
-    //border-radius: 0;
-    width: 0%;
-    border: none;
-  }
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    //filter: invert(100%);
-    height: 1rem;
-    width: 1rem;
-    background-color: hsl(0, 0%, 100%);
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
   }
 
-  &::-moz-range-progress {
-    filter: invert(100%);
-    background-color: hsl(0, 0%, 100%);
-    height: 50%;
-  }
-
-  &::-moz-range-track {
-    background-color: hsl(0, 0%, 50%);
-    height: 50%;
-  }
-
-  &::-webkit-slider-runnable-track {
-    -webkit-appearance: none;
-    filter: invert(100%);
-    background-color: hsl(0, 0%, 50%);
+  &::-moz-range-thumb {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    cursor: pointer;
+    border: none;
   }
 }
 
-.show-volume {
-  transform: scaleX(1) !important;
+@media only screen and (max-width: 600px) {
+  #control-bar {
+    min-width: 90vw;
+    gap: 1rem;
+    padding: 0 1rem;
+    
+    &>.duration {
+      font-size: 0.75rem;
+      min-width: 100px;
+    }
+  }
 }
 
 </style>
