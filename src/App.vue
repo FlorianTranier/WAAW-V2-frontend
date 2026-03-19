@@ -18,7 +18,7 @@ watch(
   () => route.query.v,
   () => {
     audioId.value = route.query.v?.toString() ?? ''
-    if (audioElement.value) audioElement.value.src = `${import.meta.env.VITE_API_BASE_URL}/audio/${audioId.value}` 
+    if (audioElement.value) audioElement.value.src = `${import.meta.env.VITE_API_BASE_URL}/${audioId.value}`
   }
 )
 

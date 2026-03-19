@@ -29,7 +29,7 @@ export class SphereScene implements IScene {
     this.particles = new BufferGeometry()
     const particleMaterial = new PointsMaterial({
       color: 0xDADADA,
-      size: 4,
+      size: 3,
       map: new TextureLoader().load('./particle.png'),
       blending: AdditiveBlending,
       transparent: true,
@@ -40,7 +40,7 @@ export class SphereScene implements IScene {
     // Generate discrete 3D sphere
     const radius = 100
     const nbPoints = 4000
-    const step = 2 / nbPoints
+    const step = 3 / nbPoints
     const turns = 60 // Number of times to turn around the y-axis
 
 
@@ -85,7 +85,9 @@ export class SphereScene implements IScene {
 
   render = (audioData: number[]) => {
     // requestAnimationFrame(() => this.render(audioData))
-    const skipFrequencies = 620
+    const skipFrequencies = 200
+    this.particleSystem.rotation.y += 0.006
+    this.particleSystem.rotation.x += 0.001
     // Update the particles
     for (let i = 0; i < this.count / 2; i++) {
       if (i + skipFrequencies < audioData.length){

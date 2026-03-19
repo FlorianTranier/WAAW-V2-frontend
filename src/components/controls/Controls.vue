@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{audioId: string}>(), {
   audioId: ''
 })
 
-const durationInSeconds = ref(0)
+const duration = ref(0)
 
 const audioElement = inject<Ref<HTMLAudioElement>>('audioElement')
 const audioCtx = inject<AudioContext>('audioContext')
@@ -79,7 +79,7 @@ watch(
   () => props.audioId,
   async () => {
     if (props.audioId)
-      durationInSeconds.value = (await getAudioInfo(props.audioId)).durationInSeconds
+      duration.value = (await getAudioInfo(props.audioId)).duration
   }
 )
 
@@ -138,7 +138,7 @@ onMounted(async () => {
       </span>
       <p class="duration">
         {{ Math.floor(currentTime / 60).toString().padStart(2, '0') }}:{{ Math.floor(currentTime % 60).toString().padStart(2, '0') }} /
-        {{ Math.floor(durationInSeconds / 60).toString().padStart(2, '0') }}:{{ (durationInSeconds % 60).toString().padStart(2, '0') }}
+        {{ Math.floor(duration / 60).toString().padStart(2, '0') }}:{{ (duration % 60).toString().padStart(2, '0') }}
       </p>
       <span class="icon">
         <img

@@ -25,9 +25,9 @@ watch(
     if (props.audioId) {
       const info = await getAudioInfo(props.audioId)
       title.value = info.title
-      thumbnailsUrl.value = info.thumbnailsUrl
+      thumbnailsUrl.value = info.thumbnail
       author.value = info.author
-      durationInSeconds.value = info.durationInSeconds
+      durationInSeconds.value = info.duration
     }
   }
 )
