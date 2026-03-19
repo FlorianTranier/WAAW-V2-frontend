@@ -99,6 +99,7 @@ onBeforeUnmount(() => {
       id="audio"
       ref="audioElement"
       crossorigin="anonymous"
+      preload="auto"
     />
 
     <component
