@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<{audioData: number[]}>(), {
 onMounted(() => {
   if (threeContainer.value) {
     scene = new Scenes[selectedScene.value](threeContainer.value) //new Scenes.SPHERE(threeContainer.value)
+    selectedSceneInstance.value = scene
   }
 })
 

@@ -1,4 +1,4 @@
-import { BufferGeometry, Line, LineBasicMaterial, PerspectiveCamera, Scene, Vector2, WebGLRenderer } from 'three'
+import { BufferGeometry, Line, LineBasicMaterial, PerspectiveCamera, Scene, Vector2, WebGLRenderer, Vector3 } from 'three'
 import { IScene } from './../IScene'
 import { ref } from '@vue/reactivity'
 import { SceneParameter } from '@composables/three/templates/SceneParameter'
@@ -13,49 +13,81 @@ export class FlatLineScene implements IScene {
   bufferGeometry: BufferGeometry
   filterNumberOfPointsFactor = ref(10)
   color = ref('#dadada')
+  amplitude = ref(100)
+  yOffset = ref(30)
+
+  private lines: Line[] = []
 
   constructor(container: HTMLElement) {
     this.scene = new Scene()
-    this.camera = new PerspectiveCamera( 75, container.clientWidth / container.clientHeight, 0.1, 1000)
-    this.renderer = new WebGLRenderer({ alpha: true })
+    this.camera = new PerspectiveCamera( 75, container.clientWidth / container.clientHeight, 0.1, 10000)
+    this.renderer = new WebGLRenderer({ alpha: true, antialias: true })
     this.renderer.setSize(container.clientWidth, container.clientHeight)
     container.appendChild(this.renderer.domElement)
 
     this.material = new LineBasicMaterial({ color: this.color.value })
-
     this.bufferGeometry = new BufferGeometry()
 
     this.camera.position.set(0, 0, 1000)
     window.addEventListener('resize', this.resizeHandler)
+
+    // Pre-create the lines and add them to the scene
+    for (let i = 0; i < 4; i++) {
+      const line = new Line(this.bufferGeometry, this.material)
+      this.lines.push(line)
+      this.scene.add(line)
+    }
+
     this.render([])
   }
 
   render(audioData: number[]): void {
-    this.material = new LineBasicMaterial({ color: this.color.value })
+    this.material.color.set(this.color.value as string)
 
-    const data = audioData.filter((_, index) => index % (100 - this.filterNumberOfPointsFactor.value) === 0)
-    const xGap = window.innerWidth / data.length
-    const yGap = window.innerHeight / 500
-    const points = []
-    if (!audioData) {
-      points.push( new Vector2( -window.innerWidth / 2, 0 ) )
-      points.push( new Vector2(window.innerWidth / 2, 0 ) )
-    } else {
-      points.push(...data.map((data, index) => new Vector2(index * xGap, data * yGap)))
-    }
+    const detailFactor = Math.max(1, 101 - (this.filterNumberOfPointsFactor.value as number))
+    const data = audioData.filter((_, index) => index % detailFactor === 0)
     
+    const points: Vector3[] = []
+    
+    if (!audioData || audioData.length === 0) {
+      points.push(new Vector3(0, 0, 0))
+      points.push(new Vector3(window.innerWidth, 0, 0))
+    } else {
+      const xGap = (window.innerWidth / 2) / (data.length - 1 || 1)
+      const yMultiplier = (this.amplitude.value as number) / 255
+      
+      points.push(...data.map((val, index) => {
+        const x = index * xGap
+        const y = val * yMultiplier
+        return new Vector3(x, y, 0)
+      }))
+    }
 
     this.bufferGeometry.setFromPoints(points)
-  
 
-    const upperRightLine = (new Line(this.bufferGeometry, this.material)).translateY(30)
-    const lowerRightLine = upperRightLine.clone().translateY(-30).rotateX(Math.PI)
-    const upperLeftLine = upperRightLine.clone().rotateY(Math.PI)
-    const lowerLeftLine = upperLeftLine.clone().translateY(-30).rotateX(Math.PI)
+    const offset = this.yOffset.value as number
 
-    this.scene.clear()
-    this.scene.add( upperLeftLine, upperRightLine, lowerRightLine, lowerLeftLine )
-    this.renderer.render( this.scene, this.camera )
+    // Upper Right (original orientation, offset up)
+    this.lines[0].position.set(0, offset, 0)
+    this.lines[0].rotation.set(0, 0, 0)
+    this.lines[0].scale.set(1, 1, 1)
+
+    // Lower Right (mirrored Y, offset down)
+    this.lines[1].position.set(0, -offset, 0)
+    this.lines[1].rotation.set(Math.PI, 0, 0)
+    this.lines[1].scale.set(1, 1, 1)
+
+    // Upper Left (mirrored X, offset up)
+    this.lines[2].position.set(0, offset, 0)
+    this.lines[2].rotation.set(0, Math.PI, 0)
+    this.lines[2].scale.set(1, 1, 1)
+
+    // Lower Left (mirrored X and Y, offset down)
+    this.lines[3].position.set(0, -offset, 0)
+    this.lines[3].rotation.set(Math.PI, Math.PI, 0)
+    this.lines[3].scale.set(1, 1, 1)
+
+    this.renderer.render(this.scene, this.camera)
   }
 
   resizeHandler = () => {
@@ -63,17 +95,18 @@ export class FlatLineScene implements IScene {
     this.camera.updateProjectionMatrix()
 
     this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.render([])
   }
 
   animate(): void {
-    requestAnimationFrame(this.animate)
-
+    requestAnimationFrame(() => this.animate())
     this.renderer.render(this.scene, this.camera)
   }
 
   getParameters = (): SceneParameter[] => [
-    new SceneParameter({ label: 'Details', result: this.filterNumberOfPointsFactor, type: SceneParameterType.RANGE, range: { low: 0, high: 99 } }),
-    new SceneParameter({ label: 'Color', result: this.color, type: SceneParameterType.COLOR })
+    new SceneParameter({ label: 'Details', result: this.filterNumberOfPointsFactor, type: SceneParameterType.RANGE, range: { low: 1, high: 99 } }),
+    new SceneParameter({ label: 'Amplitude', result: this.amplitude, type: SceneParameterType.RANGE, range: { low: 0, high: 500 } }),
+    new SceneParameter({ label: 'Y Offset', result: this.yOffset, type: SceneParameterType.RANGE, range: { low: 0, high: 500 } }),
   ]
 
 }

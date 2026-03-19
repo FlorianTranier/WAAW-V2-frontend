@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { SceneParameter } from '@composables/three/templates/SceneParameter'
 import { SceneParameterType } from '@composables/three/templates/SceneParameterType'
-import { watch } from '@vue/runtime-core'
+import { onMounted, watch } from '@vue/runtime-core'
 import { selectedScene, selectedSceneInstance } from '@composables/sceneSelector/sceneSelector'
 import { Ref, ref } from '@vue/reactivity'
 import { showOverlay } from '@/composables/overlay/overlay'
 
 const sceneParameters: Ref<SceneParameter[]> = ref([])
+
+onMounted(() => {
+  if (selectedSceneInstance.value)
+    sceneParameters.value = selectedSceneInstance.value.getParameters()
+})
 
 watch(selectedScene, () => {
   if (selectedSceneInstance.value)
