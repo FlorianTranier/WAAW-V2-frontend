@@ -160,8 +160,9 @@ onBeforeUnmount(() => {
   }
 
   &#audio-info {
-    left: 2rem;
+    left: 50%;
     top: 2rem;
+    transform: translate(-50%, 0);
   }
 
   &#scene-parameters {

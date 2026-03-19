@@ -1,4 +1,4 @@
-import { BufferGeometry, Line, LineBasicMaterial, PerspectiveCamera, Scene, Vector2, WebGLRenderer, Vector3 } from 'three'
+import { BufferGeometry, Line, LineBasicMaterial, PerspectiveCamera, Scene, WebGLRenderer, Vector3 } from 'three'
 import { IScene } from './../IScene'
 import { ref } from '@vue/reactivity'
 import { SceneParameter } from '@composables/three/templates/SceneParameter'
@@ -44,8 +44,7 @@ export class FlatLineScene implements IScene {
   render(audioData: number[]): void {
     this.material.color.set(this.color.value as string)
 
-    const detailFactor = Math.max(1, 101 - (this.filterNumberOfPointsFactor.value as number))
-    const data = audioData.filter((_, index) => index % detailFactor === 0)
+    const data = audioData
     
     const points: Vector3[] = []
     
@@ -53,11 +52,11 @@ export class FlatLineScene implements IScene {
       points.push(new Vector3(0, 0, 0))
       points.push(new Vector3(window.innerWidth, 0, 0))
     } else {
-      const xGap = (window.innerWidth / 2) / (data.length - 1 || 1)
+      const xGap = (window.innerWidth) / (data.length - 1 || 1)
       const yMultiplier = (this.amplitude.value as number) / 255
       
       points.push(...data.map((val, index) => {
-        const x = index * xGap
+        const x = index * xGap * 1.9
         const y = val * yMultiplier
         return new Vector3(x, y, 0)
       }))
@@ -104,7 +103,6 @@ export class FlatLineScene implements IScene {
   }
 
   getParameters = (): SceneParameter[] => [
-    new SceneParameter({ label: 'Details', result: this.filterNumberOfPointsFactor, type: SceneParameterType.RANGE, range: { low: 1, high: 99 } }),
     new SceneParameter({ label: 'Amplitude', result: this.amplitude, type: SceneParameterType.RANGE, range: { low: 0, high: 500 } }),
     new SceneParameter({ label: 'Y Offset', result: this.yOffset, type: SceneParameterType.RANGE, range: { low: 0, high: 500 } }),
   ]

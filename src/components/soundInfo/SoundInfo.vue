@@ -26,7 +26,7 @@ watch(
       const info = await getAudioInfo(props.audioId)
       title.value = info.title
       thumbnailsUrl.value = info.thumbnail
-      author.value = info.author
+      author.value = info.artist || info.channel
       durationInSeconds.value = info.duration
     }
   }
@@ -59,17 +59,17 @@ watchEffect(() => {
         <div id="author">
           {{ author }}
         </div>
+        <div
+          id="progress-bar"
+          class="overlay-element"
+          :class="{'overlay-element-show': showOverlay}"
+        >
+          <div
+            id="progress-bar-track"
+            ref="progressBarTrack"
+          />
+        </div>
       </div>
-    </div>
-    <div
-      id="progress-bar"
-      class="overlay-element"
-      :class="{'overlay-element-show': showOverlay}"
-    >
-      <div
-        id="progress-bar-track"
-        ref="progressBarTrack"
-      />
     </div>
   </div>
 </template>
@@ -80,7 +80,7 @@ watchEffect(() => {
   height: auto;
   min-height: 80px;
   width: fit-content;
-  max-width: 450px;
+  max-width: 90dvh;
   padding: 1.25rem;
   background: var(--bg-glass);
   backdrop-filter: blur(var(--blur-amount));
@@ -125,10 +125,7 @@ watchEffect(() => {
 }
 
 #progress-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
+  width: 100%;
   height: 4px;
   background: rgba(255, 255, 255, 0.1);
   z-index: 1000;

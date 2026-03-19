@@ -4,4 +4,6 @@ export interface AudioInfo {
   duration: number
   thumbnail: string
   author: string
+  artist: string
+  channel: string
 }
