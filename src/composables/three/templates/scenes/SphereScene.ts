@@ -97,9 +97,9 @@ export class SphereScene implements IScene {
       this.positions[i * 3 + 2] = z * radius
 
       // Initial color (cool gray/white)
-      this.colors[i * 3] = 0.8
-      this.colors[i * 3 + 1] = 0.8
-      this.colors[i * 3 + 2] = 0.8
+      this.colors[i * 3] = 1.8
+      this.colors[i * 3 + 1] = 1.8
+      this.colors[i * 3 + 2] = 1.8
 
       this.sizes[i] = 4.0
     }
@@ -129,14 +129,14 @@ export class SphereScene implements IScene {
     this.particleSystem.rotation.x += 0.01
 
     // Global pulse (breathing)
-    const pulseFactor = 10 + Math.sin(this.time)
+    const pulseFactor = 9 + Math.sin(this.time)
     
     const positions = this.particles.attributes.position.array as Float32Array
     const colors = this.particles.attributes.color.array as Float32Array
     const sizes = this.particles.attributes.size.array as Float32Array
 
     // Audio intensity (average of middle-to-high frequencies usually carries more impact)
-    let intensity = 0
+    const intensity = 0
     if (audioData.length > 0) {
       const startFreq = 200
       const endFreq = 1800
@@ -176,30 +176,36 @@ export class SphereScene implements IScene {
 
       // Color gradient: dark blue -> blue -> purple -> pink -> white/yellow based on audioValue
       let r = 0, g = 0, b = 0
-      if (audioValue < 0.25) {
-        // Dark blue to blue
-        const t = audioValue / 0.25
-        r = 0.1 * (1 - t) + 0.1 * t
-        g = 0.1 * (1 - t) + 0.4 * t
-        b = 0.4 * (1 - t) + 1.0 * t
-      } else if (audioValue < 0.5) {
-        // Blue to purple
-        const t = (audioValue - 0.25) / 0.25
-        r = 0.1 * (1 - t) + 0.5 * t
-        g = 0.4 * (1 - t) + 0.0 * t
-        b = 1.0 * (1 - t) + 1.0 * t
-      } else if (audioValue < 0.75) {
-        // Purple to pink/red
-        const t = (audioValue - 0.5) / 0.25
-        r = 0.5 * (1 - t) + 1.0 * t
-        g = 0.0 * (1 - t) + 0.2 * t
-        b = 1.0 * (1 - t) + 0.5 * t
-      } else {
-        // Pink to white/yellow
-        const t = (audioValue - 0.75) / 0.25
+      if (audioValue < 0.2) {
+        // Deep blue to electric cyan
+        const t = audioValue / 0.2
+        r = 0.02 * (1 - t) + 0.0 * t
+        g = 0.08 * (1 - t) + 1.0 * t
+        b = 0.35 * (1 - t) + 1.0 * t
+      } else if (audioValue < 0.4) {
+        // Cyan to neon green
+        const t = (audioValue - 0.2) / 0.2
+        r = 0.0 * (1 - t) + 0.1 * t
+        g = 1.0 * (1 - t) + 1.0 * t
+        b = 1.0 * (1 - t) + 0.2 * t
+      } else if (audioValue < 0.6) {
+        // Neon green to hot magenta
+        const t = (audioValue - 0.4) / 0.2
+        r = 0.1 * (1 - t) + 1.0 * t
+        g = 1.0 * (1 - t) + 0.0 * t
+        b = 0.2 * (1 - t) + 0.9 * t
+      } else if (audioValue < 0.8) {
+        // Magenta to blazing red/orange
+        const t = (audioValue - 0.6) / 0.2
         r = 1.0 * (1 - t) + 1.0 * t
-        g = 0.2 * (1 - t) + 0.9 * t
-        b = 0.5 * (1 - t) + 0.3 * t
+        g = 0.0 * (1 - t) + 0.35 * t
+        b = 0.9 * (1 - t) + 0.0 * t
+      } else {
+        // Red/orange to bright yellow/white
+        const t = (audioValue - 0.8) / 0.2
+        r = 1.0 * (1 - t) + 1.0 * t
+        g = 0.35 * (1 - t) + 1.0 * t
+        b = 0.0 * (1 - t) + 0.6 * t
       }
 
       colors[i * 3] = r

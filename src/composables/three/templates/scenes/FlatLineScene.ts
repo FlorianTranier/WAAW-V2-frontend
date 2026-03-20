@@ -62,7 +62,7 @@ export class FlatLineScene implements IScene {
       const yMultiplier = (this.amplitude.value as number) / 255
       
       points.push(...data.map((val, index) => {
-        const x = index * xGap * 1.9
+        const x = index * xGap
         const y = val * yMultiplier
         return new Vector3(x, y, 0)
       }))

@@ -60,28 +60,31 @@ onMounted(() => {
 
 const analyserLoop = setInterval(() => {
   audioAnalyser.value.getByteFrequencyData(audioRawData.value)
-  // audioProcessedData.value = processAudioData()
-  copyAudioData()
+  audioProcessedData.value = processAudioData()
 }, 1000 / 60)
 
-// TODO FIX THIS
-/*const processAudioData = (): number[] => {
-  const processedData = []
-  for (let [i, j] = [40, 41]; i < audioRawData.value.length; i = j) {
-    j *= 1.005
-    const sum = audioRawData.value.slice(i, j).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-    const mean = sum / (j - i)
+const processAudioData = (): number[] => {
+  const numBins = 128
+  const processedData = new Array(numBins).fill(0)
+  
+  // We use a power function to distribute bins logarithmically.
+  // Higher power = more bins for low frequencies.
+  const power = 1.5
+  const rawDataLength = audioRawData.value.length
 
-    processedData.push(mean)
+  for (let i = 0; i < numBins; i++) {
+    const startRatio = Math.pow(i / numBins, power)
+    const endRatio = Math.pow((i + 1) / numBins, power)
+    
+    const start = Math.floor(startRatio * rawDataLength)
+    const end = Math.floor(endRatio * rawDataLength)
+
+    const slice = audioRawData.value.slice(start, Math.max(end, start + 1))
+    const sum = slice.reduce((acc, val) => acc + val, 0)
+    processedData[i] = sum / slice.length
   }
+
   return processedData
-}*/
-
-const copyAudioData = (): void => {
-  audioProcessedData.value = []
-  for (let i = 0; i < audioRawData.value.length; i++) {
-    audioProcessedData.value.push(audioRawData.value[i])
-  }
 }
 
 onBeforeUnmount(() => {
