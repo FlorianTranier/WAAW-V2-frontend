@@ -114,8 +114,8 @@ export class SphereScene implements IScene {
     this.particleSystem = new Points(this.particles, particleMaterial)
     this.scene.add(this.particleSystem)
 
-    this.camera.position.set(0, 150, 400)
-    //this.particleSystem.rotation.set(Math.PI / 8, 0, Math.PI / 8)
+    this.camera.position.set(0, 0, 700)
+    this.particleSystem.rotation.set(Math.PI / 2, 0, Math.PI / 2)
 
     window.addEventListener('resize', this.resizeHandler)
     this.render([])
@@ -126,10 +126,10 @@ export class SphereScene implements IScene {
     this.particleSystem.material.uniforms.time.value = this.time
     
     // Global rotations
-    this.particleSystem.rotation.y += 0.003
+    this.particleSystem.rotation.x += 0.01
 
     // Global pulse (breathing)
-    const pulseFactor = 8 + Math.sin(this.time)
+    const pulseFactor = 10 + Math.sin(this.time)
     
     const positions = this.particles.attributes.position.array as Float32Array
     const colors = this.particles.attributes.color.array as Float32Array
@@ -153,7 +153,7 @@ export class SphereScene implements IScene {
     for (let i = 0; i < this.count; i++) {
       // Map audio frequency to particle
       // We use different segments of audio data for different particles
-      const audioIdx = Math.floor((i / this.count) * audioData.length * 0.5) + 100
+      const audioIdx = Math.floor((i / (this.count * 2)) * audioData.length * 0.5)
       const audioValue = (audioData[audioIdx] || 0) / 255
       
       // Dynamic displacement factor
