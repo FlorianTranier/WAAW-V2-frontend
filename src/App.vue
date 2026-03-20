@@ -69,7 +69,7 @@ const processAudioData = (): number[] => {
   
   // We use a power function to distribute bins logarithmically.
   // Higher power = more bins for low frequencies.
-  const power = 1.5
+  const power = 2
   const rawDataLength = audioRawData.value.length
 
   for (let i = 0; i < numBins; i++) {

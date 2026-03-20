@@ -48,7 +48,7 @@ export class SphereScene implements IScene {
   particles: BufferGeometry
   particleSystem: Points<BufferGeometry, ShaderMaterial>
   // orbit: OrbitControls
-  count = 2500 // Number of particles
+  count = 10000 // Number of particles
 
   private time = 0
 
@@ -129,7 +129,7 @@ export class SphereScene implements IScene {
     this.particleSystem.rotation.x += 0.01
 
     // Global pulse (breathing)
-    const pulseFactor = 9 + Math.sin(this.time)
+    const pulseFactor = 8 + Math.sin(this.time)
     
     const positions = this.particles.attributes.position.array as Float32Array
     const colors = this.particles.attributes.color.array as Float32Array
