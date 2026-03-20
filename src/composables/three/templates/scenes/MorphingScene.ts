@@ -148,12 +148,12 @@ export class MorphingScene implements IScene {
       const v = (Math.random() * 2 - 1) * size
       let x = 0, y = 0, z = 0
       switch(face) {
-        case 0: x =  size; y = u; z = v; break
-        case 1: x = -size; y = u; z = v; break
-        case 2: x = u; y =  size; z = v; break
-        case 3: x = u; y = -size; z = v; break
-        case 4: x = u; y = v; z =  size; break
-        case 5: x = u; y = v; z = -size; break
+      case 0: x =  size; y = u; z = v; break
+      case 1: x = -size; y = u; z = v; break
+      case 2: x = u; y =  size; z = v; break
+      case 3: x = u; y = -size; z = v; break
+      case 4: x = u; y = v; z =  size; break
+      case 5: x = u; y = v; z = -size; break
       }
       this.cubePositions[i * 3] = x
       this.cubePositions[i * 3 + 1] = y
@@ -164,8 +164,8 @@ export class MorphingScene implements IScene {
   private generatePyramid() {
     const size = 100
     const A = { x: -size, y: -size, z: -size }, B = { x:  size, y: -size, z: -size },
-          C = { x:  size, y: -size, z:  size }, D = { x: -size, y: -size, z:  size },
-          Apex = { x: 0, y: size, z: 0 }
+      C = { x:  size, y: -size, z:  size }, D = { x: -size, y: -size, z:  size },
+      Apex = { x: 0, y: size, z: 0 }
     for (let i = 0; i < this.count; i++) {
       const face = i % 5
       let x = 0, y = 0, z = 0
@@ -178,10 +178,11 @@ export class MorphingScene implements IScene {
         const sqrtR1 = Math.sqrt(r1)
         let v1, v2, v3
         switch(face) {
-          case 1: v1 = Apex; v2 = A; v3 = B; break
-          case 2: v1 = Apex; v2 = B; v3 = C; break
-          case 3: v1 = Apex; v2 = C; v3 = D; break
-          case 4: v1 = Apex; v2 = D; v3 = A; break
+        case 1: v1 = Apex; v2 = A; v3 = B; break
+        case 2: v1 = Apex; v2 = B; v3 = C; break
+        case 3: v1 = Apex; v2 = C; v3 = D; break
+        case 4: v1 = Apex; v2 = D; v3 = A; break
+        default: v1 = Apex; v2 = A; v3 = B
         }
         x = (1 - sqrtR1) * v1.x + (sqrtR1 * (1 - r2)) * v2.x + (sqrtR1 * r2) * v3.x
         y = (1 - sqrtR1) * v1.y + (sqrtR1 * (1 - r2)) * v2.y + (sqrtR1 * r2) * v3.y

@@ -117,6 +117,7 @@ export class PyramidScene implements IScene {
         case 2: v1 = Apex; v2 = B; v3 = C; break // Right face
         case 3: v1 = Apex; v2 = C; v3 = D; break // Back face
         case 4: v1 = Apex; v2 = D; v3 = A; break // Left face
+        default: v1 = Apex; v2 = A; v3 = B
         }
         
         x = (1 - sqrtR1) * v1.x + (sqrtR1 * (1 - r2)) * v2.x + (sqrtR1 * r2) * v3.x
