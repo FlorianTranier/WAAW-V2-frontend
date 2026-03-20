@@ -15,6 +15,7 @@ export class FlatLineScene implements IScene {
   color = ref('#dadada')
   amplitude = ref(100)
   yOffset = ref(30)
+  meanValue = ref(0)
 
   private lines: Line[] = []
 
@@ -45,6 +46,15 @@ export class FlatLineScene implements IScene {
     this.material.color.set(this.color.value as string)
 
     const data = audioData
+
+    const newMean = data.reduce((acc, val) => acc + val, 0) / data.length
+    if (newMean > this.meanValue.value) {
+      this.yOffset.value < 1000 ? this.yOffset.value += 1 : this.yOffset.value = 1000
+      this.meanValue.value = newMean
+    } else if (newMean < this.meanValue.value) {
+      this.yOffset.value > 0 ? this.yOffset.value -= 1 : this.yOffset.value = 0
+      this.meanValue.value = newMean
+    }
     
     const points: Vector3[] = []
     
@@ -104,7 +114,6 @@ export class FlatLineScene implements IScene {
 
   getParameters = (): SceneParameter[] => [
     new SceneParameter({ label: 'Amplitude', result: this.amplitude, type: SceneParameterType.RANGE, range: { low: 0, high: 500 } }),
-    new SceneParameter({ label: 'Y Offset', result: this.yOffset, type: SceneParameterType.RANGE, range: { low: 0, high: 500 } }),
   ]
 
 }
