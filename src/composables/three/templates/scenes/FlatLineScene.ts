@@ -48,13 +48,9 @@ export class FlatLineScene implements IScene {
     const data = audioData
 
     const newMean = data.reduce((acc, val) => acc + val, 0) / data.length
-    if (newMean > this.meanValue.value) {
-      this.yOffset.value < 1000 ? this.yOffset.value += 1 : this.yOffset.value = 1000
-      this.meanValue.value = newMean
-    } else if (newMean < this.meanValue.value) {
-      this.yOffset.value > 0 ? this.yOffset.value -= 1 : this.yOffset.value = 0
-      this.meanValue.value = newMean
-    }
+    this.yOffset.value = newMean * 3
+    this.meanValue.value = newMean
+
     
     const points: Vector3[] = []
     

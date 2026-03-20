@@ -72,7 +72,7 @@ export class SphereScene implements IScene {
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
       blending: AdditiveBlending,
-      transparent: true,
+      transparent: false,
       depthWrite: false
     })
 
@@ -114,8 +114,8 @@ export class SphereScene implements IScene {
     this.particleSystem = new Points(this.particles, particleMaterial)
     this.scene.add(this.particleSystem)
 
-    this.camera.position.set(0, 0, 300)
-    this.particleSystem.rotation.set(Math.PI / 8, 0, Math.PI / 8)
+    this.camera.position.set(0, 150, 400)
+    //this.particleSystem.rotation.set(Math.PI / 8, 0, Math.PI / 8)
 
     window.addEventListener('resize', this.resizeHandler)
     this.render([])
@@ -127,11 +127,9 @@ export class SphereScene implements IScene {
     
     // Global rotations
     this.particleSystem.rotation.y += 0.003
-    this.particleSystem.rotation.x += 0.001
-    this.particleSystem.rotation.z += 0.0015
 
     // Global pulse (breathing)
-    const pulseFactor = 1 + Math.sin(this.time) * 0.05
+    const pulseFactor = 8 + Math.sin(this.time)
     
     const positions = this.particles.attributes.position.array as Float32Array
     const colors = this.particles.attributes.color.array as Float32Array
@@ -140,15 +138,14 @@ export class SphereScene implements IScene {
     // Audio intensity (average of middle-to-high frequencies usually carries more impact)
     let intensity = 0
     if (audioData.length > 0) {
-      const startFreq = 600
-      const endFreq = 1400
+      const startFreq = 200
+      const endFreq = 1800
       const range = Math.min(audioData.length, endFreq) - startFreq
       if (range > 0) {
         let sum = 0
         for (let i = startFreq; i < startFreq + range; i++) {
           sum += audioData[i]
-        }
-        intensity = sum / (range * 255) // Normalize to 0-1
+        }         // Normalize to 0-1
       }
     }
 
@@ -177,11 +174,37 @@ export class SphereScene implements IScene {
       positions[i * 3 + 1] = by * factor + noiseY
       positions[i * 3 + 2] = bz * factor + noiseZ
 
-      // Reactive colors: bright white/cyan on high values, dimmer gray otherwise
-      const c = 0.5 + audioValue * 0.5
-      colors[i * 3] = c
-      colors[i * 3 + 1] = c + (intensity * 0.2)
-      colors[i * 3 + 2] = c + (intensity * 0.4)
+      // Color gradient: dark blue -> blue -> purple -> pink -> white/yellow based on audioValue
+      let r = 0, g = 0, b = 0
+      if (audioValue < 0.25) {
+        // Dark blue to blue
+        const t = audioValue / 0.25
+        r = 0.1 * (1 - t) + 0.1 * t
+        g = 0.1 * (1 - t) + 0.4 * t
+        b = 0.4 * (1 - t) + 1.0 * t
+      } else if (audioValue < 0.5) {
+        // Blue to purple
+        const t = (audioValue - 0.25) / 0.25
+        r = 0.1 * (1 - t) + 0.5 * t
+        g = 0.4 * (1 - t) + 0.0 * t
+        b = 1.0 * (1 - t) + 1.0 * t
+      } else if (audioValue < 0.75) {
+        // Purple to pink/red
+        const t = (audioValue - 0.5) / 0.25
+        r = 0.5 * (1 - t) + 1.0 * t
+        g = 0.0 * (1 - t) + 0.2 * t
+        b = 1.0 * (1 - t) + 0.5 * t
+      } else {
+        // Pink to white/yellow
+        const t = (audioValue - 0.75) / 0.25
+        r = 1.0 * (1 - t) + 1.0 * t
+        g = 0.2 * (1 - t) + 0.9 * t
+        b = 0.5 * (1 - t) + 0.3 * t
+      }
+
+      colors[i * 3] = r
+      colors[i * 3 + 1] = g
+      colors[i * 3 + 2] = b
 
       // Reactive sizes: audio makes particles bigger
       sizes[i] = 4.0 + audioValue * 15.0
